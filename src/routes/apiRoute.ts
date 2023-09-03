@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { APIRoutes } from '@src/constants/routes'
-import { registerController } from '@src/controllers/registerController'
-import { loginController } from '@src/controllers/loginController'
+
+import registerRoute from './registerRoute'
+import loginRoute from './loginRoute'
 
 const apiRoute = Router()
-apiRoute.post(APIRoutes.REGISTER, registerController)
-apiRoute.post(APIRoutes.LOGIN, loginController)
+apiRoute.use(registerRoute)
+apiRoute.use(loginRoute)
 
 export default apiRoute

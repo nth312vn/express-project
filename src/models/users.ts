@@ -5,10 +5,6 @@ import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
-    _id: {
-      type: ObjectId,
-      unique: true
-    },
     username: {
       type: String,
       require: true
@@ -67,5 +63,5 @@ const schema = new mongoose.Schema(
     timestamps: true
   }
 )
-const userModel = mongoose.model(DBModel.USER, schema)
+const userModel = mongoose.model(DBModel.USERS, schema)
 export default userModel

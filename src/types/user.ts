@@ -19,4 +19,4 @@ export interface User {
   avatar?: string
   cover_photo?: string
 }
-export type UserRequest = Omit<User, '_id'>
+export type UserRequest = Omit<User, '_id' | 'createdAt' | 'updatedAt'>

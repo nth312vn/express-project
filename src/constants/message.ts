@@ -1,5 +1,5 @@
 export enum Message {
   NOTFOUND = 'Route does not exist',
-  INTERNALSERVERERROR = 'Internal sever errors',
-  REGISTERSUCCESS = 'Register user is successfully'
+  INTERNAL_SERVER_ERROR = 'Internal sever errors',
+  REGISTER_SUCCESS = 'Register user is successfully'
 }
