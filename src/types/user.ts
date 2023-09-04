@@ -1,5 +1,5 @@
 import { UserVerifyStatus } from '@src/constants/user'
-import { ObjectId } from 'mongodb'
+import { ObjectId } from 'mongoose'
 
 export interface User {
   _id: ObjectId
@@ -20,3 +20,7 @@ export interface User {
   cover_photo?: string
 }
 export type UserRequest = Omit<User, '_id' | 'createdAt' | 'updatedAt'>
+export interface LoginInfo {
+  email: string
+  password: string
+}

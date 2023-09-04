@@ -1,12 +1,14 @@
+import { hashPassword } from '@src/helpers/password'
 import userModel from '@src/models/users'
-import { UserRequest } from '@src/types/user'
+import { User, UserRequest } from '@src/types/user'
 
-export const addNewUser = async (params: UserRequest) => {
+export const createUser = async (params: UserRequest) => {
+  const passwordHashed = await hashPassword(params.password)
   const userDetail = new userModel({
     name: params.name,
     email: params.email,
     date_of_birth: params.date_of_birth,
-    password: params.password,
+    password: passwordHashed,
     email_verify_token: params.email_verify_token,
     forgot_password_token: params.forgot_password_token,
     verify: params.verify,
@@ -19,7 +21,7 @@ export const addNewUser = async (params: UserRequest) => {
   })
   return await userDetail.save()
 }
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
   return await userModel.findOne({
     email
   })

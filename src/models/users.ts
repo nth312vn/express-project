@@ -1,6 +1,5 @@
 import { DBModel } from '@src/constants/models'
 import { UserVerifyStatus } from '@src/constants/user'
-import { ObjectId } from 'mongodb'
 import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(

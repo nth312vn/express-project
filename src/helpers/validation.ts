@@ -31,7 +31,6 @@ export const registerBodySchema = () => {
       custom: {
         options: async (email: string) => {
           const user = await getUserByEmail(email)
-          console.log(user)
           if (user) {
             throw new Error('Email is must unique')
           }
@@ -105,5 +104,39 @@ export const registerBodySchema = () => {
     //     errorMessage: 'avatar must be string'
     //   }
     // }
+  }
+}
+export const loginBodySchema = () => {
+  return {
+    email: {
+      notEmpty: {
+        errorMessage: 'email is required'
+      },
+      isString: {
+        errorMessage: 'email must be string'
+      },
+      isEmail: {
+        errorMessage: 'email is invalid'
+      },
+      custom: {
+        options: async (email: string) => {
+          const user = await getUserByEmail(email)
+          if (!user) {
+            throw new Error('User is not exists')
+          }
+        }
+      }
+    },
+    password: {
+      notEmpty: {
+        errorMessage: 'password is required'
+      },
+      isString: {
+        errorMessage: 'password must be string'
+      },
+      isLength: {
+        min: 8
+      }
+    }
   }
 }
