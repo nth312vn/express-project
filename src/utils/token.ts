@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-export const generateAccessToken = (payload: any) => {
+export const generateAccessToken = (payload: any): Promise<string> => {
   return new Promise((res, rej) => {
     jwt.sign(
       payload,
@@ -9,7 +9,7 @@ export const generateAccessToken = (payload: any) => {
         algorithm: 'HS256',
         expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME
       },
-      (err, encode) => {
+      (err, encode = '') => {
         if (err) {
           return rej(err)
         }
@@ -19,7 +19,7 @@ export const generateAccessToken = (payload: any) => {
   })
 }
 
-export const generateRefreshToken = (payload: any) => {
+export const generateRefreshToken = (payload: any): Promise<string> => {
   return new Promise((res, rej) => {
     jwt.sign(
       payload,
@@ -28,7 +28,7 @@ export const generateRefreshToken = (payload: any) => {
         algorithm: 'HS256',
         expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME
       },
-      (err, encode) => {
+      (err, encode = '') => {
         if (err) {
           return rej(err)
         }

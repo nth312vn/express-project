@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-export const hash = (value: string) => {
+export const hash = (value: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const salt = crypto.randomBytes(16).toString('hex')
 

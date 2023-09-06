@@ -1,5 +1,6 @@
 import { DBModel } from '@src/constants/models'
 import { UserVerifyStatus } from '@src/constants/user'
+import { User } from '@src/types/user'
 import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(
@@ -62,5 +63,5 @@ const schema = new mongoose.Schema(
     timestamps: true
   }
 )
-const userModel = mongoose.model(DBModel.USERS, schema)
+const userModel = mongoose.model<User>(DBModel.USERS, schema)
 export default userModel

@@ -21,8 +21,8 @@ export const createUser = async (params: UserRequest) => {
   })
   return await userDetail.save()
 }
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByConditions = async (conditions: Partial<User>): Promise<User | null> => {
   return await userModel.findOne({
-    email
+    ...conditions
   })
 }

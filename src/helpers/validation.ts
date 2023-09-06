@@ -1,7 +1,9 @@
-import { getUserByEmail } from '@src/services/user'
+import { getUserByConditions } from '@src/services/user'
+import { checkSchema } from 'express-validator'
+import { hashPassword } from './password'
 
-export const registerBodySchema = () => {
-  return {
+export const registerBodyValidation = () => {
+  return checkSchema({
     name: {
       notEmpty: {
         errorMessage: 'name is required'
@@ -30,7 +32,7 @@ export const registerBodySchema = () => {
       },
       custom: {
         options: async (email: string) => {
-          const user = await getUserByEmail(email)
+          const user = await getUserByConditions({ email })
           if (user) {
             throw new Error('Email is must unique')
           }
@@ -104,10 +106,10 @@ export const registerBodySchema = () => {
     //     errorMessage: 'avatar must be string'
     //   }
     // }
-  }
+  })
 }
-export const loginBodySchema = () => {
-  return {
+export const loginBodyValidation = () => {
+  return checkSchema({
     email: {
       notEmpty: {
         errorMessage: 'email is required'
@@ -119,11 +121,13 @@ export const loginBodySchema = () => {
         errorMessage: 'email is invalid'
       },
       custom: {
-        options: async (email: string) => {
-          const user = await getUserByEmail(email)
+        options: async (email: string, { req }) => {
+          const passwordHashed = await hashPassword(req.body.password)
+          const user = await getUserByConditions({ email, password: passwordHashed })
           if (!user) {
             throw new Error('User is not exists')
           }
+          req.locals.user = user
         }
       }
     },
@@ -135,8 +139,11 @@ export const loginBodySchema = () => {
         errorMessage: 'password must be string'
       },
       isLength: {
-        min: 8
+        options: {
+          min: 8
+        },
+        errorMessage: 'password is in valid'
       }
     }
-  }
+  })
 }
