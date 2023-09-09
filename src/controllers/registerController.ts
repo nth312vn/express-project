@@ -12,6 +12,7 @@ export const registerController = async (req: CustomRequestBody<UserRequest>, re
     const user = await createUser(req.body)
     const [accessToken, refreshToken] = await Promise.all([
       generateAccessToken({
+        userId: user._id,
         name: user.name,
         email: user.email,
         date_of_birth: user.date_of_birth,

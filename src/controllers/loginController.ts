@@ -3,10 +3,11 @@ import { User } from '@src/types/user'
 import { generateAccessToken, generateRefreshToken } from '@src/utils/token'
 import { Request, Response } from 'express'
 
-export const loginController = async (req: Request, res: Response) => {
-  const userInfo: User = res.locals.userInfo
+export const loginController = async (req: any, res: Response) => {
+  const userInfo: User = req.user
   const [accessToken, refreshToken] = await Promise.all([
     generateAccessToken({
+      userId: userInfo._id,
       name: userInfo.name,
       email: userInfo.email,
       date_of_birth: userInfo.date_of_birth,

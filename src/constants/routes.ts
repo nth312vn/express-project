@@ -1,9 +1,11 @@
 export enum Routes {
   API = '/api',
-  ALL = '*'
+  ALL = '*',
+  AUTH = '/auth'
 }
 
-export enum APIRoutes {
+export enum AuthRoutes {
   REGISTER = '/register',
-  LOGIN = '/login'
+  LOGIN = '/login',
+  LOG_OUT = '/logout'
 }

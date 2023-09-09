@@ -1,3 +1,4 @@
+import { Bearer } from '@src/constants/user'
 import jwt from 'jsonwebtoken'
 
 export const generateAccessToken = (payload: any): Promise<string> => {
@@ -46,4 +47,19 @@ export const verifyToken = (token: string) => {
       return res(decode)
     })
   })
+}
+
+export const isValidAccessToken = (token: string) => {
+  console.log(token)
+  const [bearer] = getAccessToken(token)
+  if (!isBearer(bearer)) {
+    return false
+  }
+  return true
+}
+export const getAccessToken = (token: string) => {
+  return token.split(' ')
+}
+export const isBearer = (bearer: string) => {
+  return bearer === Bearer
 }

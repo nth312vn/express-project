@@ -1,6 +1,8 @@
 import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
-import { hashPassword } from './password'
+import { isValidPassword } from './password'
+import { getAccessToken, isValidAccessToken, verifyToken } from '@src/utils/token'
+import { getRefreshTokenByCondition } from '@src/services/refreshToken'
 
 export const registerBodyValidation = () => {
   return checkSchema({
@@ -122,12 +124,15 @@ export const loginBodyValidation = () => {
       },
       custom: {
         options: async (email: string, { req }) => {
-          const passwordHashed = await hashPassword(req.body.password)
-          const user = await getUserByConditions({ email, password: passwordHashed })
+          const user = await getUserByConditions({ email })
           if (!user) {
             throw new Error('User is not exists')
           }
-          req.locals.user = user
+          const isValidPass = await isValidPassword(req.body.password, user.password)
+          if (!isValidPass) {
+            throw new Error('Email or password is invalid')
+          }
+          req.user = user
         }
       }
     },
@@ -143,6 +148,40 @@ export const loginBodyValidation = () => {
           min: 8
         },
         errorMessage: 'password is in valid'
+      }
+    }
+  })
+}
+export const logOutValidationReq = () => {
+  return checkSchema({
+    authorization: {
+      notEmpty: {
+        errorMessage: 'token is required'
+      },
+      isString: {
+        errorMessage: 'token must be string'
+      },
+      custom: {
+        options: async (value: string, { req }) => {
+          const isValid = isValidAccessToken(value)
+          if (!isValid) {
+            throw new Error('Token is invalid1')
+          }
+          req.body.tokenDecoded = await verifyToken(getAccessToken(value)[1])
+        }
+      }
+    },
+    refreshToken: {
+      notEmpty: {
+        errorMessage: 'token is required'
+      },
+      isString: {
+        errorMessage: 'token must be string'
+      },
+      custom: {
+        options: async (value, { req }) => {
+          await verifyToken(value)
+        }
       }
     }
   })

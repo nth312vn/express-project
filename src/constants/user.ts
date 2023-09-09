@@ -3,3 +3,4 @@ export enum UserVerifyStatus {
   VERIFIED = 'Verified',
   BANNED = 'Banned'
 }
+export const Bearer = 'Bearer'
