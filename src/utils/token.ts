@@ -49,8 +49,7 @@ export const verifyToken = (token: string) => {
   })
 }
 
-export const isValidAccessToken = (token: string) => {
-  console.log(token)
+export const isBearerToken = (token: string) => {
   const [bearer] = getAccessToken(token)
   if (!isBearer(bearer)) {
     return false

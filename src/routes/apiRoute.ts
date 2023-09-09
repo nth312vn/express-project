@@ -1,11 +1,7 @@
 import { Router } from 'express'
-
-import registerRoute from './registerRoute'
-import loginRoute from './loginRoute'
-import logOutRoute from './logout'
+import { Routes } from '@src/constants/routes'
+import authRoute from './auth.routes'
 
 const apiRoute = Router()
-apiRoute.use(registerRoute)
-apiRoute.use(loginRoute)
-apiRoute.use(logOutRoute)
+apiRoute.use(Routes.AUTH, authRoute)
 export default apiRoute

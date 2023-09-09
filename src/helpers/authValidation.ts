@@ -1,8 +1,7 @@
 import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
 import { isValidPassword } from './password'
-import { getAccessToken, isValidAccessToken, verifyToken } from '@src/utils/token'
-import { getRefreshTokenByCondition } from '@src/services/refreshToken'
+import { getAccessToken, isBearerToken, verifyToken } from '@src/utils/token'
 
 export const registerBodyValidation = () => {
   return checkSchema({
@@ -163,7 +162,7 @@ export const logOutValidationReq = () => {
       },
       custom: {
         options: async (value: string, { req }) => {
-          const isValid = isValidAccessToken(value)
+          const isValid = isBearerToken(value)
           if (!isValid) {
             throw new Error('Token is invalid1')
           }
@@ -179,7 +178,7 @@ export const logOutValidationReq = () => {
         errorMessage: 'token must be string'
       },
       custom: {
-        options: async (value, { req }) => {
+        options: async (value) => {
           await verifyToken(value)
         }
       }
