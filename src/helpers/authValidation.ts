@@ -2,6 +2,8 @@ import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
 import { isValidPassword } from './password'
 import { getAccessToken, isBearerToken, verifyToken } from '@src/utils/token'
+import { CustomError } from './customError'
+import { httpStatusCode } from '@src/constants/httpStatusCode'
 
 export const registerBodyValidation = () => {
   return checkSchema({
@@ -129,7 +131,7 @@ export const loginBodyValidation = () => {
           }
           const isValidPass = await isValidPassword(req.body.password, user.password)
           if (!isValidPass) {
-            throw new Error('Email or password is invalid')
+            throw new CustomError({ message: 'Email or password is invalid', status: httpStatusCode.UNAUTHORIZED })
           }
           req.user = user
         }
@@ -162,11 +164,15 @@ export const logOutValidationReq = () => {
       },
       custom: {
         options: async (value: string, { req }) => {
-          const isValid = isBearerToken(value)
-          if (!isValid) {
-            throw new Error('Token is invalid1')
+          try {
+            const isValid = isBearerToken(value)
+            if (!isValid) {
+              throw new Error()
+            }
+            req.body.tokenDecoded = await verifyToken(getAccessToken(value)[1])
+          } catch (e) {
+            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
           }
-          req.body.tokenDecoded = await verifyToken(getAccessToken(value)[1])
         }
       }
     },
@@ -179,7 +185,11 @@ export const logOutValidationReq = () => {
       },
       custom: {
         options: async (value) => {
-          await verifyToken(value)
+          try {
+            await verifyToken(value)
+          } catch (e) {
+            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
+          }
         }
       }
     }

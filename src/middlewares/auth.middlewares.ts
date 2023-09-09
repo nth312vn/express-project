@@ -7,17 +7,17 @@ import { validationResult } from 'express-validator'
 export const loginValidation = (req: CustomRequestBody<LoginInfo>, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(httpStatusCode.UNPROCESSABLE_ENTITY).json({
+    return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({
       message: errors.array()[0].msg
     })
   }
   next()
 }
-export const logOutValidation = (req: any, res: Response, next: NextFunction) => {
+export const logoutValidation = (req: any, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
   console.log(errors)
   if (!errors.isEmpty()) {
-    return res.status(httpStatusCode.UNPROCESSABLE_ENTITY).json({
+    return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({
       message: errors.array()[0].msg
     })
   }
@@ -26,7 +26,7 @@ export const logOutValidation = (req: any, res: Response, next: NextFunction) =>
 export const registerValidation = (req: CustomRequestBody<UserRequest>, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(httpStatusCode.UNPROCESSABLE_ENTITY).json({
+    return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({
       message: errors.array()[0].msg
     })
   }
