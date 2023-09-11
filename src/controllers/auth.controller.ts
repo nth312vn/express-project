@@ -4,12 +4,13 @@ import { CustomError } from '@src/helpers/customError'
 import { createRefreshToken, deleteRefreshToken } from '@src/services/refreshToken'
 import { createUser } from '@src/services/user'
 import { CustomRequestBody } from '@src/types/custom'
+import { LoginRequest, LogoutRequest } from '@src/types/requestTypes'
 import { User, UserRequest } from '@src/types/user'
 import { generateAccessToken, generateRefreshToken } from '@src/utils/token'
 import { NextFunction, Response } from 'express'
 
-export const loginController = async (req: any, res: Response) => {
-  const userInfo: User = req.user
+export const loginController = async (req: CustomRequestBody<LoginRequest>, res: Response) => {
+  const userInfo: User = req.body.user
   const [accessToken, refreshToken] = await Promise.all([
     generateAccessToken({
       userId: userInfo._id,
@@ -64,10 +65,10 @@ export const registerController = async (req: CustomRequestBody<UserRequest>, re
   }
 }
 
-export const logoutController = async (req: any, res: Response) => {
+export const logoutController = async (req: CustomRequestBody<LogoutRequest>, res: Response) => {
   const isExists = await deleteRefreshToken({
     refreshToken: req.body.refreshToken,
-    userId: req.body.tokenDecoded.userId
+    userId: res.locals.tokenDecoded.userId
   })
   if (!isExists) {
     throw new CustomError({

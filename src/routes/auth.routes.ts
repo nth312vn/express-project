@@ -1,13 +1,18 @@
 import { AuthRoutes } from '@src/constants/routes'
 import { logoutController, loginController, registerController } from '@src/controllers/auth.controller'
 import { logOutValidationReq, loginBodyValidation, registerBodyValidation } from '@src/helpers/authValidation'
-import { logoutValidation, loginValidation, registerValidation } from '@src/middlewares/auth.middlewares'
+import {
+  logoutValidation,
+  loginValidation,
+  registerValidation,
+  accessTokenValidation
+} from '@src/middlewares/auth.middlewares'
 import { Router } from 'express'
 
 const authRoute = Router()
 const loginMiddlewares = [loginBodyValidation(), loginValidation]
 const registerMiddlewares = [registerBodyValidation(), registerValidation]
-const logoutMiddlewares = [logOutValidationReq(), logoutValidation]
+const logoutMiddlewares = [logOutValidationReq(), logoutValidation, accessTokenValidation]
 
 authRoute.post(AuthRoutes.LOGIN, ...loginMiddlewares, loginController)
 authRoute.post(AuthRoutes.REGISTER, ...registerMiddlewares, registerController)

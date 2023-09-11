@@ -1,7 +1,7 @@
 import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
 import { isValidPassword } from './password'
-import { getAccessToken, isBearerToken, verifyToken } from '@src/utils/token'
+import { verifyToken } from '@src/utils/token'
 import { CustomError } from './customError'
 import { httpStatusCode } from '@src/constants/httpStatusCode'
 
@@ -133,7 +133,7 @@ export const loginBodyValidation = () => {
           if (!isValidPass) {
             throw new CustomError({ message: 'Email or password is invalid', status: httpStatusCode.UNAUTHORIZED })
           }
-          req.user = user
+          req.body.user = user
         }
       }
     },
@@ -161,20 +161,20 @@ export const logOutValidationReq = () => {
       },
       isString: {
         errorMessage: 'token must be string'
-      },
-      custom: {
-        options: async (value: string, { req }) => {
-          try {
-            const isValid = isBearerToken(value)
-            if (!isValid) {
-              throw new Error()
-            }
-            req.body.tokenDecoded = await verifyToken(getAccessToken(value)[1])
-          } catch (e) {
-            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
-          }
-        }
       }
+      // custom: {
+      //   options: async (value: string, { req }) => {
+      //     try {
+      //       const isValid = isBearerToken(value)
+      //       if (!isValid) {
+      //         throw new Error()
+      //       }
+      //       req.body.tokenDecoded = await verifyToken(getAccessToken(value)[1])
+      //     } catch (e) {
+      //       throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
+      //     }
+      //   }
+      // }
     },
     refreshToken: {
       notEmpty: {
