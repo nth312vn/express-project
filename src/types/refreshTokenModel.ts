@@ -9,5 +9,5 @@ export interface RefreshTokenModel {
 }
 export interface CreateRefreshTokenParams {
   refreshToken: string
-  userId: ObjectId
+  userId: string
 }

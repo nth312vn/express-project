@@ -1,8 +1,8 @@
 import { hashPassword } from '@src/helpers/password'
 import userModel from '@src/models/users'
-import { User, UserRequest } from '@src/types/user'
+import { CreateUser, User } from '@src/types/user'
 
-export const createUser = async (params: UserRequest) => {
+export const createUser = async (params: CreateUser) => {
   const passwordHashed = await hashPassword(params.password)
   const userDetail = new userModel({
     name: params.name,
@@ -19,10 +19,18 @@ export const createUser = async (params: UserRequest) => {
     avatar: params.avatar,
     cover_photo: params.cover_photo
   })
+  if (params.generateEmailVerifyToken) {
+    userDetail.email_verify_token = await params.generateEmailVerifyToken({ id: userDetail.id })
+  }
   return await userDetail.save()
 }
 export const getUserByConditions = async (conditions: Partial<User>): Promise<User | null> => {
   return await userModel.findOne({
     ...conditions
+  })
+}
+export const updateUserByCondition = async (conditions: Partial<User>, update: Partial<User>): Promise<User | null> => {
+  return await userModel.findOneAndUpdate(conditions, update, {
+    new: true
   })
 }

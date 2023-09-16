@@ -6,3 +6,9 @@ export interface LogoutRequest {
 export interface LoginRequest extends User {
   user: User
 }
+export interface VerifyEmailRequest {
+  emailVerifyToken: string
+  tokenDecode: {
+    id: string
+  }
+}

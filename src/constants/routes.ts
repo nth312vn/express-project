@@ -7,5 +7,6 @@ export enum Routes {
 export enum AuthRoutes {
   REGISTER = '/register',
   LOGIN = '/login',
-  LOG_OUT = '/logout'
+  LOG_OUT = '/logout',
+  VERIFY_EMAIL = '/verify-email'
 }

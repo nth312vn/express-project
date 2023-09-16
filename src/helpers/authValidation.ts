@@ -1,7 +1,7 @@
 import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
 import { isValidPassword } from './password'
-import { verifyToken } from '@src/utils/token'
+import { verifyEmailVerifyToken, verifyToken } from '@src/utils/token'
 import { CustomError } from './customError'
 import { httpStatusCode } from '@src/constants/httpStatusCode'
 
@@ -187,6 +187,28 @@ export const logOutValidationReq = () => {
         options: async (value) => {
           try {
             await verifyToken(value)
+          } catch (e) {
+            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
+          }
+        }
+      }
+    }
+  })
+}
+export const emailValidationRequest = () => {
+  return checkSchema({
+    emailVerifyToken: {
+      notEmpty: {
+        errorMessage: 'token is required'
+      },
+      isString: {
+        errorMessage: 'token must be string'
+      },
+      custom: {
+        options: async (value, { req }) => {
+          try {
+            const tokenDecoded = await verifyEmailVerifyToken(value)
+            req.body.tokenDecoded = tokenDecoded
           } catch (e) {
             throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
           }
