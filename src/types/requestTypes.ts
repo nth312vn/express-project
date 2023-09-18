@@ -12,3 +12,7 @@ export interface VerifyEmailRequest {
     id: string
   }
 }
+export interface ForgotPassword {
+  email: string
+  user: User
+}

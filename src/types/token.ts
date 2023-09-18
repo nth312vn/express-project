@@ -11,3 +11,14 @@ export interface CreateRefreshTokenParams {
   refreshToken: string
   userId: string
 }
+export interface TokenDecoded {
+  userId: string
+  name: string
+  email: string
+  date_of_birth: string
+  bio: string
+  location: string
+  website: string
+  avatar: string
+  cover_photo: string
+}

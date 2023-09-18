@@ -1,5 +1,5 @@
 import refreshTokenModel from '@src/models/refreshToken'
-import { CreateRefreshTokenParams, RefreshTokenModel } from '@src/types/refreshTokenModel'
+import { CreateRefreshTokenParams, RefreshTokenModel } from '@src/types/token'
 
 export const createRefreshToken = async (params: CreateRefreshTokenParams) => {
   const refreshTokenDetail = new refreshTokenModel(params)

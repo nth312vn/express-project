@@ -6,10 +6,16 @@ import { isStatusVerified } from '@src/helpers/verify'
 import { createRefreshToken, deleteRefreshToken } from '@src/services/refreshToken'
 import { createUser, getUserByConditions, updateUserByCondition } from '@src/services/user'
 import { CustomRequestBody } from '@src/types/custom'
-import { LoginRequest, LogoutRequest, VerifyEmailRequest } from '@src/types/requestTypes'
+import { ForgotPassword, LoginRequest, LogoutRequest, VerifyEmailRequest } from '@src/types/requestTypes'
+import { TokenDecoded } from '@src/types/token'
 import { User, UserRequest } from '@src/types/user'
-import { generateAccessToken, generateEmailVerifyToken, generateRefreshToken } from '@src/utils/token'
-import { NextFunction, Response } from 'express'
+import {
+  generateAccessToken,
+  generateEmailVerifyToken,
+  generateForgotPasswordToken,
+  generateRefreshToken
+} from '@src/utils/token'
+import { NextFunction, Request, Response } from 'express'
 
 export const loginController = async (req: CustomRequestBody<LoginRequest>, res: Response) => {
   const userInfo: User = req.body.user
@@ -91,7 +97,7 @@ export const verifyEmailController = async (req: CustomRequestBody<VerifyEmailRe
       message: Message.USER_IS_NOT_FOUND
     })
   }
-  if (!user?.email_verify_token && isStatusVerified(user?.verify)) {
+  if (!user.email_verify_token && isStatusVerified(user?.verify)) {
     return res.status(httpStatusCode.BAD_REQUEST).json({
       message: Message.EMAIL_IS_VERIFIED
     })
@@ -105,5 +111,42 @@ export const verifyEmailController = async (req: CustomRequestBody<VerifyEmailRe
   )
   return res.status(httpStatusCode.OK).json({
     message: Message.VERIFY_EMAIL_SUCCESS
+  })
+}
+export const resendVerifyEmailController = async (req: Request, res: Response) => {
+  const tokenDecoded = res.locals.tokenDecoded as TokenDecoded
+  const user = await getUserByConditions({ _id: tokenDecoded.userId })
+  if (!user) {
+    return res.status(httpStatusCode.NOTFOUND).json({
+      message: Message.USER_IS_NOT_FOUND
+    })
+  }
+  if (!user.email_verify_token && isStatusVerified(user.verify)) {
+    return res.status(httpStatusCode.BAD_REQUEST).json({
+      message: Message.EMAIL_IS_VERIFIED
+    })
+  }
+  const newEmailVerifyToken = await generateEmailVerifyToken({ id: user._id })
+  await updateUserByCondition(
+    { _id: user._id },
+    {
+      email_verify_token: newEmailVerifyToken
+    }
+  )
+  return res.status(httpStatusCode.OK).json({
+    message: Message.RESEND_EMAIL_SUCCESS
+  })
+}
+export const forgotPasswordController = async (req: CustomRequestBody<ForgotPassword>, res: Response) => {
+  const user = req.body.user
+  const forgotPasswordToken = await generateForgotPasswordToken({ id: user._id })
+  await updateUserByCondition(
+    { _id: user._id },
+    {
+      forgot_password_token: forgotPasswordToken
+    }
+  )
+  return res.status(httpStatusCode.OK).json({
+    message: Message.PASSWORD_ALREADY_RESET
   })
 }

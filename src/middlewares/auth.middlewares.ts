@@ -2,7 +2,7 @@ import { httpStatusCode } from '@src/constants/httpStatusCode'
 import { Message } from '@src/constants/message'
 import { CustomError } from '@src/helpers/customError'
 import { CustomRequestBody } from '@src/types/custom'
-import { VerifyEmailRequest } from '@src/types/requestTypes'
+import { ForgotPassword, VerifyEmailRequest } from '@src/types/requestTypes'
 import { LoginInfo, UserRequest } from '@src/types/user'
 import { getAccessToken, isBearerToken, verifyToken } from '@src/utils/token'
 import { NextFunction, Request, Response } from 'express'
@@ -56,6 +56,15 @@ export const accessTokenValidation = async (req: Request, res: Response, next: N
   }
 }
 export const emailValidation = (req: CustomRequestBody<VerifyEmailRequest>, res: Response, next: NextFunction) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({
+      message: errors.array()[0].msg
+    })
+  }
+  next()
+}
+export const forgotPasswordValidation = (req: CustomRequestBody<ForgotPassword>, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({

@@ -217,3 +217,27 @@ export const emailValidationRequest = () => {
     }
   })
 }
+export const validateForgotPasswordRequest = () => {
+  return checkSchema({
+    email: {
+      notEmpty: {
+        errorMessage: 'email is required'
+      },
+      isString: {
+        errorMessage: 'email must be string'
+      },
+      isEmail: {
+        errorMessage: 'email is invalid'
+      },
+      custom: {
+        options: async (email: string, { req }) => {
+          const user = await getUserByConditions({ email })
+          if (!user) {
+            throw new Error('User is not exists')
+          }
+          req.body.user = user
+        }
+      }
+    }
+  })
+}
