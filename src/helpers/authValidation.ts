@@ -264,3 +264,36 @@ export const validateForgotPasswordTokenRequest = () => {
     }
   })
 }
+export const validateResetPasswordRequest = () => {
+  return checkSchema({
+    token: {
+      notEmpty: {
+        errorMessage: 'token is required'
+      },
+      isString: {
+        errorMessage: 'token must be string'
+      },
+      custom: {
+        options: async (value, { req }) => {
+          try {
+            const tokenDecoded = await verifyForgotPasswordToken(value)
+            req.body.tokenDecoded = tokenDecoded
+          } catch (e) {
+            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
+          }
+        }
+      }
+    },
+    password: {
+      notEmpty: {
+        errorMessage: 'password is required'
+      },
+      isString: {
+        errorMessage: 'password must be string'
+      },
+      isStrongPassword: {
+        errorMessage: 'password is not strong '
+      }
+    }
+  })
+}

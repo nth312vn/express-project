@@ -6,7 +6,8 @@ import {
   verifyEmailController,
   resendVerifyEmailController,
   forgotPasswordController,
-  verifyForgotPasswordTokenController
+  verifyForgotPasswordTokenController,
+  resetPasswordController
 } from '@src/controllers/auth.controller'
 import {
   emailValidationRequest,
@@ -14,7 +15,8 @@ import {
   loginBodyValidation,
   registerBodyValidation,
   validateForgotPasswordRequest,
-  validateForgotPasswordTokenRequest
+  validateForgotPasswordTokenRequest,
+  validateResetPasswordRequest
 } from '@src/helpers/authValidation'
 import {
   logoutValidation,
@@ -34,7 +36,8 @@ const logoutMiddlewares = [logOutValidationReq(), logoutValidation, accessTokenV
 const verifyEmailMiddlewares = [emailValidationRequest(), emailValidation]
 const resendVerifyEmailMiddlewares = [accessTokenValidation]
 const forgotPasswordMiddlewares = [validateForgotPasswordRequest(), forgotPasswordValidation]
-const verifyForgotPasswordToken = [validateForgotPasswordTokenRequest(), validationSchema]
+const verifyForgotPasswordTokenMiddlewares = [validateForgotPasswordTokenRequest(), validationSchema]
+const resetPasswordMiddlewares = [validateResetPasswordRequest(), validationSchema]
 
 authRoute.post(AuthRoutes.LOGIN, ...loginMiddlewares, loginController)
 authRoute.post(AuthRoutes.REGISTER, ...registerMiddlewares, registerController)
@@ -44,9 +47,9 @@ authRoute.post(AuthRoutes.RESEND_VERIFY_EMAIL, ...resendVerifyEmailMiddlewares, 
 authRoute.post(AuthRoutes.FORGOT_PASSWORD, ...forgotPasswordMiddlewares, forgotPasswordController)
 authRoute.post(
   AuthRoutes.VERIFY_FORGOT_PASSWORD_TOKEN,
-  ...verifyForgotPasswordToken,
+  ...verifyForgotPasswordTokenMiddlewares,
   verifyForgotPasswordTokenController
 )
-authRoute.post(AuthRoutes.RESET_PASSWORD)
+authRoute.post(AuthRoutes.RESET_PASSWORD, ...resetPasswordMiddlewares, resetPasswordController)
 
 export default authRoute

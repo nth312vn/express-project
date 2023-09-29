@@ -12,5 +12,7 @@ export enum Message {
   RESEND_EMAIL_SUCCESS = 'Resend email success',
   PASSWORD_ALREADY_RESET = 'Password already reset',
   FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS = 'forgot password token is not exists',
-  VERIFY_FORGOT_PASSWORD_SUCCESS = 'verify forgot password success'
+  VERIFY_FORGOT_PASSWORD_SUCCESS = 'verify forgot password success',
+  RESET_PASSWORD_SUCCESS = 'reset password success',
+  GET_USER_SUCCESS = 'get user success'
 }

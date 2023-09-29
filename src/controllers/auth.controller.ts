@@ -2,11 +2,12 @@ import { httpStatusCode } from '@src/constants/httpStatusCode'
 import { Message } from '@src/constants/message'
 import { UserVerifyStatus } from '@src/constants/user'
 import { CustomError } from '@src/helpers/customError'
+import { hashPassword } from '@src/helpers/password'
 import { isStatusVerified } from '@src/helpers/verify'
 import { createRefreshToken, deleteRefreshToken } from '@src/services/refreshToken'
 import { createUser, getUserByConditions, updateUserByCondition } from '@src/services/user'
 import { CustomRequestBody } from '@src/types/custom'
-import { ForgotPassword, LoginRequest, LogoutRequest, VerifyEmailRequest } from '@src/types/requestTypes'
+import { ForgotPassword, LoginRequest, LogoutRequest, ResetPassword, VerifyEmailRequest } from '@src/types/requestTypes'
 import { TokenDecoded } from '@src/types/token'
 import { User, UserRequest } from '@src/types/user'
 import {
@@ -137,33 +138,78 @@ export const resendVerifyEmailController = async (req: Request, res: Response) =
     message: Message.RESEND_EMAIL_SUCCESS
   })
 }
-export const forgotPasswordController = async (req: CustomRequestBody<ForgotPassword>, res: Response) => {
-  const user = req.body.user
-  const forgotPasswordToken = await generateForgotPasswordToken({ id: user._id })
-  await updateUserByCondition(
-    { _id: user._id },
-    {
-      forgot_password_token: forgotPasswordToken
-    }
-  )
-  return res.status(httpStatusCode.OK).json({
-    message: Message.PASSWORD_ALREADY_RESET
-  })
+export const forgotPasswordController = async (
+  req: CustomRequestBody<ForgotPassword>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.body.user
+    const forgotPasswordToken = await generateForgotPasswordToken({ id: user._id })
+    await updateUserByCondition(
+      { _id: user._id },
+      {
+        forgot_password_token: forgotPasswordToken
+      }
+    )
+    return res.status(httpStatusCode.OK).json({
+      message: Message.PASSWORD_ALREADY_RESET
+    })
+  } catch (e) {
+    next(e)
+  }
 }
-export const verifyForgotPasswordTokenController = async (req: Request, res: Response) => {
-  const tokenDecoded = req.body.tokenDecoded
-  const user = await getUserByConditions({ _id: tokenDecoded.id })
-  if (!user) {
-    return res.status(httpStatusCode.NOTFOUND).json({
-      message: Message.USER_IS_NOT_FOUND
+export const verifyForgotPasswordTokenController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tokenDecoded = req.body.tokenDecoded
+    const user = await getUserByConditions({ _id: tokenDecoded.id })
+    if (!user) {
+      return res.status(httpStatusCode.NOTFOUND).json({
+        message: Message.USER_IS_NOT_FOUND
+      })
+    }
+    if (!user.forgot_password_token) {
+      return res.status(httpStatusCode.NOTFOUND).json({
+        message: Message.FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS
+      })
+    }
+    return res.status(httpStatusCode.OK).json({
+      message: Message.VERIFY_FORGOT_PASSWORD_SUCCESS
     })
+  } catch (e) {
+    next(e)
   }
-  if (!user.forgot_password_token) {
-    return res.status(httpStatusCode.NOTFOUND).json({
-      message: Message.FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS
+}
+export const resetPasswordController = async (
+  req: CustomRequestBody<ResetPassword>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const tokenDecoded = req.body.tokenDecoded
+    const user = await getUserByConditions({ _id: tokenDecoded.id })
+    if (!user) {
+      return res.status(httpStatusCode.NOTFOUND).json({
+        message: Message.USER_IS_NOT_FOUND
+      })
+    }
+    if (!user.forgot_password_token) {
+      return res.status(httpStatusCode.NOTFOUND).json({
+        message: Message.FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS
+      })
+    }
+    const newPassword = await hashPassword(req.body.password)
+    await updateUserByCondition(
+      { _id: user._id },
+      {
+        password: newPassword,
+        forgot_password_token: ''
+      }
+    )
+    return res.status(httpStatusCode.OK).json({
+      message: Message.RESET_PASSWORD_SUCCESS
     })
+  } catch (e) {
+    next(e)
   }
-  res.status(httpStatusCode.OK).json({
-    message: Message.VERIFY_FORGOT_PASSWORD_SUCCESS
-  })
 }

@@ -16,3 +16,10 @@ export interface ForgotPassword {
   email: string
   user: User
 }
+export interface ResetPassword {
+  password: string
+  token: string
+  tokenDecoded: {
+    id: string
+  }
+}

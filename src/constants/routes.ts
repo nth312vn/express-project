@@ -14,3 +14,6 @@ export enum AuthRoutes {
   VERIFY_FORGOT_PASSWORD_TOKEN = '/verify-forgot-password-token',
   RESET_PASSWORD = '/rest-password'
 }
+export enum UserRoutes {
+  ME = '/me'
+}
