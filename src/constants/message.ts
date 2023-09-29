@@ -9,6 +9,8 @@ export enum Message {
   USER_IS_NOT_FOUND = 'User is not found',
   EMAIL_IS_VERIFIED = 'Email is verified',
   VERIFY_EMAIL_SUCCESS = 'Verify email success',
-  RESEND_EMAIL_SUCCESS = 'Resend email successs',
-  PASSWORD_ALREADY_RESET = 'Password already reset'
+  RESEND_EMAIL_SUCCESS = 'Resend email success',
+  PASSWORD_ALREADY_RESET = 'Password already reset',
+  FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS = 'forgot password token is not exists',
+  VERIFY_FORGOT_PASSWORD_SUCCESS = 'verify forgot password success'
 }

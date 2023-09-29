@@ -150,3 +150,20 @@ export const forgotPasswordController = async (req: CustomRequestBody<ForgotPass
     message: Message.PASSWORD_ALREADY_RESET
   })
 }
+export const verifyForgotPasswordTokenController = async (req: Request, res: Response) => {
+  const tokenDecoded = req.body.tokenDecoded
+  const user = await getUserByConditions({ _id: tokenDecoded.id })
+  if (!user) {
+    return res.status(httpStatusCode.NOTFOUND).json({
+      message: Message.USER_IS_NOT_FOUND
+    })
+  }
+  if (!user.forgot_password_token) {
+    return res.status(httpStatusCode.NOTFOUND).json({
+      message: Message.FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS
+    })
+  }
+  res.status(httpStatusCode.OK).json({
+    message: Message.VERIFY_FORGOT_PASSWORD_SUCCESS
+  })
+}

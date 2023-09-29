@@ -1,7 +1,7 @@
 import { getUserByConditions } from '@src/services/user'
 import { checkSchema } from 'express-validator'
 import { isValidPassword } from './password'
-import { verifyEmailVerifyToken, verifyToken } from '@src/utils/token'
+import { verifyEmailVerifyToken, verifyForgotPasswordToken, verifyToken } from '@src/utils/token'
 import { CustomError } from './customError'
 import { httpStatusCode } from '@src/constants/httpStatusCode'
 
@@ -236,6 +236,29 @@ export const validateForgotPasswordRequest = () => {
             throw new Error('User is not exists')
           }
           req.body.user = user
+        }
+      }
+    }
+  })
+}
+
+export const validateForgotPasswordTokenRequest = () => {
+  return checkSchema({
+    token: {
+      notEmpty: {
+        errorMessage: 'token is required'
+      },
+      isString: {
+        errorMessage: 'token must be string'
+      },
+      custom: {
+        options: async (value, { req }) => {
+          try {
+            const tokenDecoded = await verifyForgotPasswordToken(value)
+            req.body.tokenDecoded = tokenDecoded
+          } catch (e) {
+            throw new CustomError({ message: 'Token is invalid', status: httpStatusCode.UNAUTHORIZED })
+          }
         }
       }
     }
