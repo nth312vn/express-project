@@ -1,6 +1,16 @@
 import { User } from '@src/types/user'
-import _ from 'lodash'
+import { pick } from 'lodash'
 
 export const ignoreUserData = (userData: User) => {
-  return _.omit(userData, ['password', 'createdAt', 'updatedAt', 'forgot_password_token', 'email_verify_token'])
+  const filteredData = pick(userData, [
+    'username',
+    'name',
+    'date_of_birth',
+    'bio',
+    'location',
+    'website',
+    'avatar',
+    'cover_photo'
+  ])
+  return filteredData
 }

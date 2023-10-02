@@ -91,8 +91,8 @@ export const logoutController = async (req: CustomRequestBody<LogoutRequest>, re
   })
 }
 export const verifyEmailController = async (req: CustomRequestBody<VerifyEmailRequest>, res: Response) => {
-  const { tokenDecode, emailVerifyToken } = req.body
-  const user = await getUserByConditions({ _id: tokenDecode.id, email_verify_token: emailVerifyToken })
+  const { tokenDecoded, emailVerifyToken } = req.body
+  const user = await getUserByConditions({ _id: tokenDecoded.id, email_verify_token: emailVerifyToken })
   if (!user) {
     return res.status(httpStatusCode.NOTFOUND).json({
       message: Message.USER_IS_NOT_FOUND

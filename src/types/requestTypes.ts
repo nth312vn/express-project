@@ -8,7 +8,7 @@ export interface LoginRequest extends User {
 }
 export interface VerifyEmailRequest {
   emailVerifyToken: string
-  tokenDecode: {
+  tokenDecoded: {
     id: string
   }
 }

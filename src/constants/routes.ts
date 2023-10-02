@@ -1,7 +1,8 @@
 export enum Routes {
   API = '/api',
   ALL = '*',
-  AUTH = '/auth'
+  AUTH = '/auth',
+  USER = '/user'
 }
 
 export enum AuthRoutes {
@@ -12,7 +13,7 @@ export enum AuthRoutes {
   RESEND_VERIFY_EMAIL = '/resend-verify-email',
   FORGOT_PASSWORD = '/forgot-password',
   VERIFY_FORGOT_PASSWORD_TOKEN = '/verify-forgot-password-token',
-  RESET_PASSWORD = '/rest-password'
+  RESET_PASSWORD = '/reset-password'
 }
 export enum UserRoutes {
   ME = '/me',

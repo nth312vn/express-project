@@ -6,7 +6,6 @@ import { CustomRequestBody } from '@src/types/custom'
 import { UpdateMeRequest } from '@src/types/requestTypes'
 import { TokenDecoded } from '@src/types/token'
 import { NextFunction, Request, Response } from 'express'
-import _ from 'lodash'
 
 export const getMeController = async (req: Request, res: Response) => {
   const tokenDecoded = res.locals.tokenDecoded as TokenDecoded
