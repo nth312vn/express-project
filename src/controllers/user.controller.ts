@@ -43,7 +43,7 @@ export const updateMeController = async (
       }
     )
     if (!data) {
-      return res.status(httpStatusCode.BAD_REQUEST).json({
+      return res.status(httpStatusCode.FORBIDDEN).json({
         message: Message.FORBIDDEN
       })
     }
