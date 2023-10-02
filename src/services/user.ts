@@ -31,6 +31,7 @@ export const getUserByConditions = async (conditions: Partial<User>): Promise<Us
 }
 export const updateUserByCondition = async (conditions: Partial<User>, update: Partial<User>): Promise<User | null> => {
   return await userModel.findOneAndUpdate(conditions, update, {
-    new: true
+    new: true,
+    omitUndefined: true
   })
 }

@@ -14,5 +14,7 @@ export enum Message {
   FORGOT_PASSWORD_TOKEN_IS_NOT_EXISTS = 'forgot password token is not exists',
   VERIFY_FORGOT_PASSWORD_SUCCESS = 'verify forgot password success',
   RESET_PASSWORD_SUCCESS = 'reset password success',
-  GET_USER_SUCCESS = 'get user success'
+  GET_USER_SUCCESS = 'get user success',
+  UPDATE_SUCCESS = 'Update success',
+  FORBIDDEN = 'forbidden'
 }

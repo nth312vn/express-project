@@ -15,5 +15,6 @@ export enum AuthRoutes {
   RESET_PASSWORD = '/rest-password'
 }
 export enum UserRoutes {
-  ME = '/me'
+  ME = '/me',
+  UPDATE_ME = '/update-me'
 }

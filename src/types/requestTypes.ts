@@ -23,3 +23,13 @@ export interface ResetPassword {
     id: string
   }
 }
+export interface UpdateMeRequest {
+  name: string
+  username: string
+  date_of_birth: string
+  cover_photo: string
+  avatar: string
+  bio: string
+  location: string
+  website: string
+}

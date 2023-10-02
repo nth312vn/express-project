@@ -24,9 +24,9 @@ import {
   registerValidation,
   accessTokenValidation,
   emailValidation,
-  forgotPasswordValidation,
-  validationSchema
+  forgotPasswordValidation
 } from '@src/middlewares/auth.middlewares'
+import { validationSchema } from '@src/middlewares/common.middlewares'
 import { Router } from 'express'
 
 const authRoute = Router()

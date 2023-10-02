@@ -73,12 +73,3 @@ export const forgotPasswordValidation = (req: CustomRequestBody<ForgotPassword>,
   }
   next()
 }
-export const validationSchema = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(errors.array()[0].msg.status ?? httpStatusCode.UNPROCESSABLE_ENTITY).json({
-      message: errors.array()[0].msg
-    })
-  }
-  next()
-}
